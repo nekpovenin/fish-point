@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аренда рыболовных снастей</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            background-image: url('https://iimg.su/s/19/2wMsgO2P0QpVyKUCWEUzOEPAMmum6LWLfWtZDTQl.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+             background-attachment: fixed;
+        }
+        header {
+            background: #008080;
+            color: #fff;
+            padding: 10px 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        nav {
+            margin: 10px 0;
+        }
+        nav a {
+            color: #fff;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+             background-color: rgba(255, 255, 255, 0.8);
+            padding-top: 0px;
+            padding-bottom: 0px;
+         }
+         .card {
+            background: #fff;
+            padding: 20px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .image-container {
+            text-align: center;
+           margin: 0;
+           z-index: 1;
+             position: relative;
+            overflow: hidden;
+        }
+        .image-wrapper {
+             position: relative;
+            display: inline-block;
+            overflow: hidden;
+              transform: scale(1);
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .image-container a img {
+             position: fixed;
+            z-index: 2;
+            width: 40px;
+            height: auto;
+        }
+
+       #marker-1 img {
+           left: 30%;
+            bottom: 20%;
+        }
+
+        #marker-2 img {
+            left: 80%;
+             bottom: 60%;
+        }
+        .custom-button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .custom-button:hover {
+            background-color: #0056b3;
+        }
+       .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+             opacity: 0;
+             transition: opacity 0.3s ease-in-out;
+             pointer-events: none;
+        }
+        .modal.show {
+             display: block;
+              opacity: 1;
+             pointer-events: auto;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 5px;
+            transform: translateY(-50px);
+              transition: transform 0.3s ease-in-out;
+        }
+        .modal.show .modal-content{
+          transform: translateY(0);
+        }
+         .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Аренда рыболовных снастей</h1>
+        <nav>
+            <a href="#">Каталог снастей</a>
+             <a href="#" id="contacts-link">Контакты</a>
+        </nav>
+    </header>
+
+    <div class="container">
+
+        <!-- Фотография с кнопками -->
+        <div class="image-container">
+            <div class="image-wrapper">
+               <img src="https://psv4.userapi.com/s/v1/d/EV5lGjPCww0LE9QUNbuH-JCUJ8XCdA2QPDJ88Ug2FLK1Z1D3PPbTu2vHFfLusCqgpo0HQ-shsx_EuXVawE19R1Rl8mHA62M3ppOmWYHtZrjhD2eIvNrb_Q/image_2024-12-15_17-32-28.png" alt="Фотография водоема">
+                <a href="#" id="marker-1"><img src="https://psv4.userapi.com/s/v1/d/vtmuuSsjS7lHIE2A4siMZ7qsrq_d7cjsbuySZz9j6vKL5M4YclByk2UDNGxVDgowsjyen31cmqJTn5OaWTuovFjGMLr3O83rU6qH_5D8VBtGPqKz0McUCg/maps.png"></a>
+                <a href="#" id="marker-2"><img src="https://psv4.userapi.com/s/v1/d/vtmuuSsjS7lHIE2A4siMZ7qsrq_d7cjsbuySZz9j6vKL5M4YclByk2UDNGxVDgowsjyen31cmqJTn5OaWTuovFjGMLr3O83rU6qH_5D8VBtGPqKz0McUCg/maps.png"></a>
+            </div>
+         </div>
+    </div>
+<footer>
+        <p>© 2024 Аренда рыболовных снастей. Все права защищены.</p>
+    </footer>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">×</span>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+<script>
+        // Функция для открытия модального окна
+       function openModal(type) {
+            var modalContent = document.getElementById("modal-content");
+            if (type === 'float') {
+                modalContent.innerHTML = `
+                    <h2>Выбор удочек с поплавком</h2>
+                    <div class="card"><img src="https://cdn.vseinstrumenti.ru/images/goods/sport-i-turizm/tovary-dlya-ohoty-i-rybalki/1570951/1200x800/52718997.jpg" alt="Удочка Поплавок 1"><h4>Удочка "Поплавок 1"</h4><p>Цена: 300 руб./день</p><p>Описание: Отличный выбор для спокойной рыбалки.</p></div>
+
+                    <div class="card"><img src="https://cdn.vseinstrumenti.ru/images/goods/sport-i-turizm/tovary-dlya-ohoty-i-rybalki/1566649/1200x800/52706091.jpg" alt="Удочка Поплавок 2"><h4>Удочка "Поплавок 2"</h4><p>Цена: 350 руб./день</p><p>Описание: Идеальна для ловли карпов.</p></div>
+                    <div class="card"><img src="https://adventurica.ru/media/product/40293/40293_1.jpg" alt="Удочка Поплавок 3"><h4>Удочка "Поплавок 3"</h4><p>Цена: 320 руб./день</p><p>Описание: Высокое качество и удобство.</p></div>
+                `;
+            } else if (type === 'spin') {
+                modalContent.innerHTML = `
+                    <h2>Выбор спиннингов</h2>
+                    <div class="card"><img src="https://contents.mediadecathlon.com/p1558460/k$a0a48f8324956331764ffd026c507418/sq/ensemble-peche-des-carnassiers-wixom-1-180ml-casting.jpg" alt="Спиннинг Летний"><h4>Спиннинг "Летний"</h4><p>Цена: 600 руб./день</p><p>Описание: Идеален для летней рыбалки.</p></div>
+                    <div class="card"><img src="https://vashivozvraty.ru/wp-content/uploads/2020/04/vozvrat-udilischa-2048x2048.jpg" alt="Спиннинг Зимний"><h4>Спиннинг "Зимний"</h4><p>Цена: 700 руб./день</p><p>Описание: Специально разработан для зимней рыбалки.</p></div>
+                    <div class="card"><img src="https://avatars.dzeninfra.ru/get-zen_doc/119454/pub_62fcf476a316be0a4000a692_62fcf99dee4d01308e2feaf7/scale_1200" alt="Спиннинг Универсальный"><h4>Спиннинг "Универсальный"</h4><p>Цена: 550 руб./день</p><p>Описание: Подходит для различных условий ловли.</p></div>
+                `;
+            } else if (type === 'marker') {
+                modalContent.innerHTML = `
+                  <h2>Выберите товар</h2>
+                   <button class = "custom-button" onclick = "openModal('float')">Поплавок</button>
+                   <button class = "custom-button" onclick = "openModal('spin')">Спиннинг</button>
+                   <button class = "custom-button" onclick = "openModal('bottom')">Донная снасть</button>
+                `;
+            } else if (type === 'bottom') {
+                modalContent.innerHTML = `
+                <h2>Выбор донных снастей</h2>
+                <div class="card"><img src="https://rybportal.ru/wp-content/uploads/2022/11/donnaia-snast-2.webp" alt="Донная снасть 1"><h4>Донная снасть 1</h4><p>Цена: 400 руб./день</p><p>Описание: Отличный выбор для спокойной рыбалки.</p></div>
+
+                <div class="card"><img src="https://d.radikal.ru/d41/1906/a3/d5e722637231.jpg" alt="Донная снасть 2"><h4>Донная снасть 2</h4><p>Цена: 450 руб./день</p><p>Описание: Идеальна для ловли карпов.</p></div>
+                <div class="card"><img src="https://i.ytimg.com/vi/W-1_n41iM5o/maxresdefault.jpg" alt="Донная снасть 3"><h4>Донная снасть 3</h4><p>Цена: 420 руб./день</p><p>Описание: Высокое качество и удобство.</p></div>
+            `;
+        } else if (type === 'contacts') {
+            modalContent.innerHTML = `
+                <h2>Контакты</h2>
+                <p>При возникновении проблем пишите нам на почту или звоните на горячую линию.</p>
+                <p>Наша почта: <a href="mailto:artem.pasharin@yandex.ru">artem.pasharin@yandex.ru</a></p>
+                <p>Горячая линия: <a href="tel:+79065329606">89065329606</a></p>
+            `;
+          }
+        const modal = document.getElementById("myModal");
+         modal.style.display = "block";
+        setTimeout(() => {
+           modal.classList.add("show");
+        }, 0)
+        }
+
+
+        // Функция для закрытия модального окна
+         function closeModal() {
+            const modal = document.getElementById("myModal");
+             modal.classList.remove("show");
+
+              setTimeout(() => {
+              modal.style.display = "none";
+              }, 300);
+        }
+
+        // Функция для смены изображения кнопки и перехода на другую страницу
+        function changeButtonImage(button, imageSrc, linkUrl) {
+            button.src = imageSrc;
+            window.location.href = linkUrl;
+        }
+
+        //Добавляем event listeners для меток и контактов
+        document.addEventListener('DOMContentLoaded', function () {
+             document.getElementById("marker-1").addEventListener('click', function (event) {
+                event.preventDefault();
+                openModal('marker');
+            });
+            document.getElementById("marker-2").addEventListener('click', function (event) {
+                event.preventDefault();
+                openModal('marker');
+            });
+            document.getElementById("contacts-link").addEventListener('click', function(event) {
+                event.preventDefault();
+                openModal('contacts')
+            })
+        });
+
+    </script>
+</body>
+</html>
